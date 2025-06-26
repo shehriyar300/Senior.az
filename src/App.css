@@ -1,0 +1,26 @@
+.app {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  transition: all 0.3s ease;
+}
+
+.main-container {
+  flex: 1;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  background: var(--bg-primary);
+  min-height: calc(100vh - 80px);
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-left: 0;
+  }
+}
