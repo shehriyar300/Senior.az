@@ -11,6 +11,18 @@ const Customers = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [ind, setInd] = useState(0);
+  const [editCustomer, setEditCustomer] = useState(null);
+  const [showMessageBox, setShowMessageBox] = useState(null);
+
+  const dispatch = useAppContext().dispatch;
+
+
+  const handleEditCustomer = (customer) => {
+    setEditCustomer(customer);
+  };
+  const handleMessageCustomer = (customer) => {
+    setShowMessageBox(customer);
+  };
 
   const filteredCustomers = customers
     .filter(
@@ -47,9 +59,13 @@ const Customers = () => {
   };
 
   const getTotalRevenue = () => {
-    return customers.reduce((sum, customer) => sum + customer.totalSpent, 0);
+    return customers.reduce(
+      (sum, customer) =>
+        sum + customer.totalSpent || ~~customer.total_spend.replace("$", ""),
+      0
+    );
   };
-
+ 
   const getAverageOrderValue = () => {
     const totalOrders = customers.reduce(
       (sum, customer) => ~~sum + customer.total_orders,
@@ -58,19 +74,21 @@ const Customers = () => {
     const totalRevenue = getTotalRevenue();
 
     return ~~totalOrders > 0 ? ~~totalRevenue / ~~customers.length : 0;
-    
   };
-  const getTotalOrders = () => {
-    return customers.reduce((sum, customer) => sum + ~~customer.total_orders, 0);
-  };
-  console.log("Total Orders:", getTotalOrders());
+ 
   const getAverageOrderValue2 = () => {
     const totalSpent = () => {
-      return customers.reduce((sum, customer) => ~~sum + ~~customer.total_spend, 0);
+      return customers.reduce((sum, customer) => {
+        const totalSpent =
+          customer.totalSpent !== undefined
+            ? ~~customer.totalSpent
+            : ~~customer.total_spend?.replace("$", "") || 0;
+        const totalOrders = ~~customer.total_orders || 1;
+        return sum + totalSpent / totalOrders;
+      }, 0);
     };
     return ~~totalSpent();
   };
-console.log("Total Spent:", getAverageOrderValue2());
 
   return (
     <div className="customers">
@@ -85,15 +103,11 @@ console.log("Total Spent:", getAverageOrderValue2());
             <span className="stat-label">Total Customers</span>
           </div>
           <div className="stat-item">
-            <span className="stat-value">
-              ${getAverageOrderValue2()}
-            </span>
+            <span className="stat-value">${getAverageOrderValue2()}</span>
             <span className="stat-label">Total Revenue</span>
           </div>
           <div className="stat-item">
-            <span className="stat-value">
-              ${getAverageOrderValue()}
-            </span>
+            <span className="stat-value">${getAverageOrderValue()}</span>
             <span className="stat-label">Avg Order Value</span>
           </div>
         </div>
@@ -171,10 +185,20 @@ console.log("Total Spent:", getAverageOrderValue2());
                     >
                       👁️
                     </button>
-                    <button className="action-btn edit" title="Edit Customer">
+
+                    <button
+                      className="action-btn edit"
+                      title="Edit Customer"
+                      onClick={() => handleEditCustomer(customer)}
+                    >
                       ✏️
                     </button>
-                    <button className="action-btn message" title="Send Message">
+
+                    <button
+                      className="action-btn message"
+                      title="Send Message"
+                      onClick={() => handleMessageCustomer(customer)}
+                    >
                       💬
                     </button>
                   </div>
@@ -184,6 +208,55 @@ console.log("Total Spent:", getAverageOrderValue2());
           </tbody>
         </table>
       </div>
+      {editCustomer && (
+        <div className="modal-overlay" onClick={() => setEditCustomer(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Edit Customer</h3>
+            <input
+              type="text"
+              value={editCustomer.name}
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, name: e.target.value })
+              }
+              placeholder="Name"
+            />
+            <input
+              type="email"
+              value={editCustomer.email}
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, email: e.target.value })
+              }
+              placeholder="Email"
+            />
+            <button
+              onClick={() => {
+                dispatch({ type: "UPDATE_CUSTOMER", payload: editCustomer });
+                setEditCustomer(null);
+              }}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      )}
+      
+      
+      {showMessageBox && (
+        <div className="modal-overlay" onClick={() => setShowMessageBox(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Message to {showMessageBox.name}</h3>
+            <textarea placeholder="Write your message here..."></textarea>
+            <button
+              onClick={() => {
+                // sendMessage(showMessageBox.email, messageText)
+                setShowMessageBox(null);
+              }}
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      )}
 
       {filteredCustomers.length === 0 && (
         <div className="no-results">
@@ -193,7 +266,6 @@ console.log("Total Spent:", getAverageOrderValue2());
         </div>
       )}
 
-      {/* Customer Details Modal */}
       {selectedCustomer && (
         <div
           className="modal-overlay"
@@ -228,13 +300,13 @@ console.log("Total Spent:", getAverageOrderValue2());
               <div className="customer-stats">
                 <div className="stat-card">
                   <span className="stat-number">
-                    {selectedCustomer.totalOrders}
+                    {selectedCustomer.total_orders}
                   </span>
                   <span className="stat-text">Total Orders</span>
                 </div>
                 <div className="stat-card">
                   <span className="stat-number">
-                    ${selectedCustomer.totalSpent.toLocaleString()}
+                    {selectedCustomer.total_spend}
                   </span>
                   <span className="stat-text">Total Spent</span>
                 </div>
@@ -242,8 +314,9 @@ console.log("Total Spent:", getAverageOrderValue2());
                   <span className="stat-number">
                     $
                     {(
-                      selectedCustomer.totalSpent / selectedCustomer.totalOrders
-                    ).toFixed(0)}
+                      ~~selectedCustomer.total_spend.replace("$", "") /
+                      ~~selectedCustomer.total_orders
+                    ).toFixed(2)}
                   </span>
                   <span className="stat-text">Avg Order</span>
                 </div>
@@ -253,12 +326,6 @@ console.log("Total Spent:", getAverageOrderValue2());
                 <div className="detail-item">
                   <span className="detail-label">Phone:</span>
                   <span className="detail-value">{selectedCustomer.phone}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Join Date:</span>
-                  <span className="detail-value">
-                    {new Date(selectedCustomer.joinDate).toLocaleDateString()}
-                  </span>
                 </div>
               </div>
             </div>

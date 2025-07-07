@@ -4,37 +4,165 @@ import { createContext, useContext, useReducer } from "react";
 
 const AppContext = createContext();
 
-// Mock data
 const initialProducts = [
   {
-    id: 1,
-    name: "iPhone 14 Pro",
-    description: "Latest iPhone with advanced camera system",
-    price: 999,
-    category: "Electronics",
-    stock: 25,
-    image: "/placeholder.svg?height=200&width=200",
-    createdAt: new Date().toISOString(),
+    id: "1b5a",
+    title: "neww",
+    description: "ssasadad",
+    price: "100",
+    discountPrice: "20",
+    rating: "20",
+    stock: "10",
+    category: "Phone",
+    image:
+      "https://images.unsplash.com/photo-1682685796965-9814afcbff55?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    create_at: 1714316506132,
+    color: "#000",
   },
   {
-    id: 2,
-    name: "MacBook Air M2",
-    description: "Powerful laptop with M2 chip",
-    price: 1199,
-    category: "Electronics",
+    id: "c2b5",
+    title: "ndssfds",
+    description: "fsfdfsd",
+    price: "20",
+    discountPrice: "5",
+    rating: "10",
+    stock: "5",
+    category: "Phone",
+    image:
+      "https://images.unsplash.com/photo-1682685796965-9814afcbff55?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    create_at: 1714382758344,
+    color: "#000",
+  },
+  {
+    id: "a2f4",
+    title: "new",
+    description: "neww",
+    price: "10",
+    discountPrice: "5",
+    rating: "6",
+    stock: "9",
+    category: "Phone",
+    image:
+      "https://images.unsplash.com/photo-1682685796965-9814afcbff55?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    create_at: 1716025970977,
+    color: "#ef1616",
+  },
+  {
+    id: "6e44",
+    title: "mobile",
+    description: "test",
+    price: "98",
+    discountPrice: "100",
+    rating: "8",
+    stock: "5",
+    category: "Phone",
+    image:
+      "https://thumbs.dreamstime.com/b/brand-new-realistic-mobile-phone-black-smartphone-apple-iphone-vector-eps-100341904.jpg",
+    create_at: 1749749724611,
+    color: "#000",
+  },
+  {
+    id: "597a",
+    title: "mobile",
+    description: "test 2",
+    price: "100",
+    discountPrice: "40",
+    rating: "9",
+    stock: "2",
+    category: "Phone",
+    image:
+      "https://thumbs.dreamstime.com/b/brand-new-realistic-mobile-phone-black-smartphone-apple-iphone-vector-eps-100341904.jpg",
+    create_at: 1749749724611,
+    color: "#000",
+  },
+  {
+    id: "4fbf",
+    title: "notebook",
+    description: "test notebook",
+    price: "100",
+    discountPrice: "10",
+    rating: "5",
+    stock: "6",
+    category: "Techn",
+    image:
+      "https://texnomart.az/wp-content/uploads/2021/12/texnomart-Notebook-HP-250-G8-Core-i5-1035G1-tvs70eqz8km3f14olbij.jpg",
+    create_at: 1749752637495,
+    color: "#000000",
+  },
+  {
+    id: "24bc",
+    title: "computer",
+    description: "comp test",
+    price: 1000,
+    discountPrice: 98,
+    finalPrice: 902,
+    rating: 5.5,
+    stock: -1,
+    category: "Techn",
+    image:
+      "https://thumbs.dreamstime.com/b/brand-new-realistic-mobile-phone-black-smartphone-apple-iphone-vector-eps-100341904.jpg",
+    create_at: 1749823008526,
+    color: "#000",
+  },
+  {
+    id: "8f7e",
+    title: "test",
+    description: "test",
+    price: 10,
+    discountPrice: 3,
+    finalPrice: 7,
+    rating: 2,
+    stock: 1,
+    category: "Phone",
+    image:
+      "https://thumbs.dreamstime.com/b/brand-new-realistic-mobile-phone-black-smartphone-apple-iphone-vector-eps-100341904.jpg",
+    create_at: 1749823008526,
+    color: "#000",
+  },
+  {
+    id: "6861",
+    title: "test",
+    description: "test",
+    price: 10,
+    discountPrice: 2,
+    finalPrice: 8,
+    rating: 5,
+    stock: 1,
+    category: "Phone",
+    image:
+      "https://texnomart.az/wp-content/uploads/2021/12/texnomart-Notebook-HP-250-G8-Core-i5-1035G1-tvs70eqz8km3f14olbij.jpg",
+    create_at: 1749823008526,
+    color: "#000",
+  },
+  {
+    id: "67ee",
+    title: "gfd",
+    description: "test notebook",
+    price: 15,
+    discountPrice: 5,
+    finalPrice: 10,
+    rating: 2,
+    stock: 4,
+    category: "Phone",
+    image:
+      "https://texnomart.az/wp-content/uploads/2021/12/texnomart-Notebook-HP-250-G8-Core-i5-1035G1-tvs70eqz8km3f14olbij.jpg",
+    create_at: 1749823008526,
+    color: "#000",
+  },
+  {
+    id: "5a1d",
+    title: "IPhone 16",
+    description: "Apple Ios 26",
+    price: 2600,
+    discountPrice: 500,
+    finalPrice: 2100,
+    rating: 9,
     stock: 15,
-    image: "/placeholder.svg?height=200&width=200",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    name: "AirPods Pro",
-    description: "Wireless earbuds with noise cancellation",
-    price: 249,
-    category: "Electronics",
-    stock: 50,
-    image: "/placeholder.svg?height=200&width=200",
-    createdAt: new Date().toISOString(),
+    category: "Mobile",
+    image:
+      "https://www.apple.com/newsroom/images/2024/09/apple-debuts-iphone-16-pro-and-iphone-16-pro-max/article/Apple-iPhone-16-Pro-hero-geo-240909_inline.jpg.large.jpg",
+    create_at: 1749904798208,
+    color: "#d0021b",
   },
 ];
 
@@ -1130,7 +1258,23 @@ function appReducer(state, action) {
           read: true,
         })),
       };
-
+    case "UPDATE_CUSTOMER":
+      return {
+        ...state,
+        customers: state.customers.map((customer) =>
+          customer.id === action.payload.id
+            ? { ...customer, ...action.payload }
+            : customer
+        ),
+        recentActions: [
+          {
+            id: Date.now(),
+            action: `Updated customer: ${action.payload.name}`,
+            time: "Just now",
+          },
+          ...state.recentActions.slice(0, 4),
+        ],
+      };
     default:
       return state;
   }

@@ -7,7 +7,7 @@ import { AppProvider } from "./context/AppContext.jsx"
 const rootElement = document.getElementById("root")
 
 if (!rootElement) {
-  throw new Error("Root element not found. Make sure there is a div with id='root' in your HTML.")
+  throw new Error("Root element not found")
 }
 
 ReactDOM.createRoot(rootElement).render(

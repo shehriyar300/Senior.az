@@ -12,7 +12,7 @@ const AddProduct = () => {
     price: "",
     category: "",
     stock: "",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "Burada Şəkil URL-si olacaq",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState({})
@@ -26,7 +26,6 @@ const AddProduct = () => {
       [name]: value,
     }))
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -55,7 +54,6 @@ const AddProduct = () => {
 
     setIsSubmitting(true)
 
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     const productData = {
@@ -66,14 +64,13 @@ const AddProduct = () => {
 
     dispatch({ type: "ADD_PRODUCT", payload: productData })
 
-    // Reset form
     setFormData({
       name: "",
       description: "",
       price: "",
       category: "",
       stock: "",
-      image: "/placeholder.svg?height=200&width=200",
+      image: "Burada Şəkil URL-si olacaq",
     })
 
     setIsSubmitting(false)

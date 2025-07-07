@@ -13,13 +13,14 @@ const ProductList = () => {
 
   const categories = ["all", ...new Set(products.map((p) => p.category))]
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = categoryFilter === "all" || product.category === categoryFilter
-    return matchesSearch && matchesCategory
-  })
+const filteredProducts = products.filter((product) => {
+  const matchesSearch =
+    product?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product?.description?.toLowerCase().includes(searchTerm.toLowerCase());
+  const matchesCategory =
+    categoryFilter === "all" || product.category === categoryFilter;
+  return matchesSearch && matchesCategory;
+});
 
   const handleEdit = (product) => {
     setEditingProduct(product.id)

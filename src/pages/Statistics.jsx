@@ -16,14 +16,14 @@ const Statistics = () => {
     { month: "Jun", value: 5500, growth: 15 },
   ]
 
-  const customerData = [
-    { month: "Jan", new: 120, returning: 80 },
-    { month: "Feb", new: 100, returning: 90 },
-    { month: "Mar", new: 150, returning: 110 },
-    { month: "Apr", new: 130, returning: 95 },
-    { month: "May", new: 180, returning: 120 },
-    { month: "Jun", new: 160, returning: 105 },
-  ]
+  // const customerData = [
+  //   { month: "Jan", new: 120, returning: 80 },
+  //   { month: "Feb", new: 100, returning: 90 },
+  //   { month: "Mar", new: 150, returning: 110 },
+  //   { month: "Apr", new: 130, returning: 95 },
+  //   { month: "May", new: 180, returning: 120 },
+  //   { month: "Jun", new: 160, returning: 105 },
+  // ]
 
   const topProducts = [
     { name: "iPhone 14 Pro", sales: 245, revenue: 244755, trend: "up" },

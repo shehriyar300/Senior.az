@@ -31,6 +31,8 @@ const ThemeSettings = ({ onClose }) => {
             ×
           </button>
         </div>
+{console.log("Theme Settings Rendered")}
+        {console.log("Current Theme:", theme)}
 
         <div className="theme-settings-content">
           <div className="setting-group">

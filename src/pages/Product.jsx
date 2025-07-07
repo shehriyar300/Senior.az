@@ -13,7 +13,6 @@ const Product = () => {
   })
 
   const [selectedColor, setSelectedColor] = useState("#ff0000")
-  const [showColorPicker, setShowColorPicker] = useState(false)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
