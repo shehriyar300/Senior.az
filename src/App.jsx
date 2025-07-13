@@ -9,15 +9,17 @@ import Customers from "./pages/Customers.jsx";
 import Statistics from "./pages/Statistics.jsx";
 import "./App.css";
 import { useAppContext } from "./context/AppContext.jsx"; 
+import Wishlist from "./pages/Wishlist.jsx";
 
 function App() {
-  const { theme, accentColor } = useAppContext();
+  const { theme, accentColor , sidebartoggle } = useAppContext();
 
   return (
     <Router>
-      <div className={`app ${theme}`} data-accent={accentColor}>
+      <div className={`app ${theme}`} data-accent={accentColor}  
+      style={{color: accentColor}}>
         <Sidebar />
-        <div className="main-container">
+        <div className={`main-container ${sidebartoggle ? "main-collapsed" : "main-collapsed-closed"}`}>
           <Header />
           <main className="main-content">
             <Routes>
@@ -27,6 +29,7 @@ function App() {
               <Route path="/basket" element={<Basket />} />
               <Route path="/customers" element={<Customers />} />
               <Route path="/statistics" element={<Statistics />} />
+              <Route path="/wishlist" element={<Wishlist />} />
             </Routes>
           </main>
         </div>

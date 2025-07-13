@@ -1,56 +1,84 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useAppContext } from "../context/AppContext.jsx"
-import "./ProductList.css"
+import { useState } from "react";
+import { useAppContext } from "../context/AppContext.jsx";
+import "./ProductList.css";
 
 const ProductList = () => {
-  const { products, dispatch } = useAppContext()
-  const [editingProduct, setEditingProduct] = useState(null)
-  const [editForm, setEditForm] = useState({})
-  const [searchTerm, setSearchTerm] = useState("")
-  const [categoryFilter, setCategoryFilter] = useState("all")
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const { products, wishlist, dispatch } = useAppContext();
 
-  const categories = ["all", ...new Set(products.map((p) => p.category))]
+  const categories = ["all", ...new Set(products.map((p) => p.category))];
 
-const filteredProducts = products.filter((product) => {
-  const matchesSearch =
-    product?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product?.description?.toLowerCase().includes(searchTerm.toLowerCase());
-  const matchesCategory =
-    categoryFilter === "all" || product.category === categoryFilter;
-  return matchesSearch && matchesCategory;
-});
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product?.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleEdit = (product) => {
-    setEditingProduct(product.id)
-    setEditForm(product)
-  }
+    setEditingProduct(product.id);
+    setEditForm(product);
+  };
 
-  const handleSave = () => {
-    dispatch({ type: "UPDATE_PRODUCT", payload: editForm })
-    setEditingProduct(null)
-    setEditForm({})
-  }
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/initialProducts/${editForm.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editForm),
+      });
+      if (!res.ok) throw new Error("Failed to update product");
+
+      dispatch({ type: "UPDATE_PRODUCT", payload: editForm });
+      setEditingProduct(null);
+      setEditForm({});
+    } catch (err) {
+      alert("Error updating product: " + err.message);
+    }
+  };
 
   const handleCancel = () => {
-    setEditingProduct(null)
-    setEditForm({})
-  }
+    setEditingProduct(null);
+    setEditForm({});
+  };
 
-  const handleDelete = (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      dispatch({ type: "DELETE_PRODUCT", payload: productId })
+  const handleDelete = async (productId) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    try {
+      const res = await fetch(`http://localhost:3001/initialProducts/${productId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete product");
+
+      dispatch({ type: "DELETE_PRODUCT", payload: productId });
+    } catch (err) {
+      alert("Error deleting product: " + err.message);
     }
-  }
+  };
 
   const handleAddToBasket = (product) => {
-    dispatch({ type: "ADD_TO_BASKET", payload: product })
-  }
+    dispatch({ type: "ADD_TO_BASKET", payload: product });
+  };
 
   const handleInputChange = (field, value) => {
-    setEditForm((prev) => ({ ...prev, [field]: value }))
-  }
+    setEditForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleWishlistToggle = (product) => {
+    const isInWishlist = wishlist.some((item) => item.id === product.id);
+    if (isInWishlist) {
+      dispatch({ type: "REMOVE_FROM_WISHLIST", payload: product.id });
+    } else {
+      dispatch({ type: "ADD_TO_WISHLIST", payload: product });
+    }
+  };
 
   return (
     <div className="product-list">
@@ -65,7 +93,9 @@ const filteredProducts = products.filter((product) => {
             <span className="stat-label">Total Products</span>
           </div>
           <div className="stat-item">
-            <span className="stat-value">{products.reduce((sum, p) => sum + p.stock, 0)}</span>
+            <span className="stat-value">
+              {products.reduce((sum, p) => ~~sum + ~~p.stock, 0)}
+            </span>
             <span className="stat-label">Total Stock</span>
           </div>
         </div>
@@ -83,7 +113,11 @@ const filteredProducts = products.filter((product) => {
           <span className="search-icon">🔍</span>
         </div>
 
-        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="category-filter">
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="category-filter"
+        >
           {categories.map((category) => (
             <option key={category} value={category}>
               {category === "all" ? "All Categories" : category}
@@ -96,12 +130,23 @@ const filteredProducts = products.filter((product) => {
         {filteredProducts.map((product) => (
           <div key={product.id} className="product-card">
             <div className="product-image">
-              <img src={product.image || "/placeholder.svg"} alt={product.name} />
+              <img
+                src={product.image || "/placeholder.svg"}
+                alt={product.name}
+              />
               <div className="product-actions">
-                <button className="action-btn edit" onClick={() => handleEdit(product)} title="Edit Product">
+                <button
+                  className="action-btn edit"
+                  onClick={() => handleEdit(product)}
+                  title="Edit Product"
+                >
                   ✏️
                 </button>
-                <button className="action-btn delete" onClick={() => handleDelete(product.id)} title="Delete Product">
+                <button
+                  className="action-btn delete"
+                  onClick={() => handleDelete(product.id)}
+                  title="Delete Product"
+                >
                   🗑️
                 </button>
                 <button
@@ -110,6 +155,19 @@ const filteredProducts = products.filter((product) => {
                   title="Add to Basket"
                 >
                   🛒
+                </button>
+                <button
+                  className="action-btn wishlist"
+                  onClick={() => handleWishlistToggle(product)}
+                  title={
+                    wishlist.some((item) => item.id === product.id)
+                      ? "Remove from Wishlist"
+                      : "Add to Wishlist"
+                  }
+                >
+                  {wishlist.some((item) => item.id === product.id)
+                    ? "💔"
+                    : "❤️"}
                 </button>
               </div>
             </div>
@@ -135,14 +193,14 @@ const filteredProducts = products.filter((product) => {
                     <input
                       type="number"
                       value={editForm.price}
-                      onChange={(e) => handleInputChange("price", Number.parseFloat(e.target.value))}
+                      onChange={(e) => handleInputChange("price", parseFloat(e.target.value))}
                       className="edit-input"
                       placeholder="Price"
                     />
                     <input
                       type="number"
                       value={editForm.stock}
-                      onChange={(e) => handleInputChange("stock", Number.parseInt(e.target.value))}
+                      onChange={(e) => handleInputChange("stock", parseInt(e.target.value))}
                       className="edit-input"
                       placeholder="Stock"
                     />
@@ -172,7 +230,11 @@ const filteredProducts = products.filter((product) => {
                     <span className="product-category">{product.category}</span>
                   </div>
                   <div className="product-stock">
-                    <span className={`stock-badge ${product.stock < 10 ? "low" : "normal"}`}>
+                    <span
+                      className={`stock-badge ${
+                        product.stock < 10 ? "low" : "normal"
+                      }`}
+                    >
                       {product.stock} in stock
                     </span>
                   </div>
@@ -191,7 +253,7 @@ const filteredProducts = products.filter((product) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ProductList
+export default ProductList;

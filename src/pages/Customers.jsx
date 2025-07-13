@@ -1,48 +1,83 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAppContext } from "../context/AppContext.jsx";
 import "./Customers.css";
 
+const stringToNumberHash = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+};
+
+const getAvatarIndex = (id) => {
+  if (!id) return 0;
+  if (typeof id === "number") return Math.abs(id) % 100;
+  return stringToNumberHash(id) % 100;
+};
+
 const Customers = () => {
-  const { customers } = useAppContext();
+  const { customers = [], dispatch } = useAppContext();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [ind, setInd] = useState(0);
   const [editCustomer, setEditCustomer] = useState(null);
   const [showMessageBox, setShowMessageBox] = useState(null);
+  const [messageText, setMessageText] = useState("");
 
-  const dispatch = useAppContext().dispatch;
+  const filteredCustomers = useMemo(() => {
+    if (!customers.length) return [];
 
+    const filtered = customers.filter((customer) => {
+      const name = customer.name?.toLowerCase() || "";
+      const email = customer.email?.toLowerCase() || "";
+      const location = customer.location?.toLowerCase() || "";
+      const term = searchTerm.toLowerCase();
 
-  const handleEditCustomer = (customer) => {
-    setEditCustomer(customer);
-  };
-  const handleMessageCustomer = (customer) => {
-    setShowMessageBox(customer);
-  };
+      return (
+        name.includes(term) ||
+        email.includes(term) ||
+        location.includes(term)
+      );
+    });
 
-  const filteredCustomers = customers
-    .filter(
-      (customer) =>
-        customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customer.location.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
+    filtered.sort((a, b) => {
+      let aValue = a[sortBy];
+      let bValue = b[sortBy];
+
+      if (sortBy === "totalOrders") {
+        aValue = Number(a.total_orders || 0);
+        bValue = Number(b.total_orders || 0);
+      } else if (sortBy === "totalSpent") {
+        const parseSpent = (c) => {
+          if (c.totalSpent !== undefined) return Number(c.totalSpent) || 0;
+          if (typeof c.total_spend === "string")
+            return Number(c.total_spend.replace(/[^0-9.-]+/g, "")) || 0;
+          return 0;
+        };
+        aValue = parseSpent(a);
+        bValue = parseSpent(b);
+      } else {
+        aValue = aValue ? aValue.toString().toLowerCase() : "";
+        bValue = bValue ? bValue.toString().toLowerCase() : "";
+      }
 
       if (typeof aValue === "string") {
         return sortOrder === "asc"
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
+      } else {
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
       }
-
-      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
     });
+
+    return filtered;
+  }, [customers, searchTerm, sortBy, sortOrder]);
 
   const handleSort = (field) => {
     if (sortBy === field) {
@@ -58,36 +93,44 @@ const Customers = () => {
     return sortOrder === "asc" ? "↑" : "↓";
   };
 
-  const getTotalRevenue = () => {
-    return customers.reduce(
-      (sum, customer) =>
-        sum + customer.totalSpent || ~~customer.total_spend.replace("$", ""),
-      0
-    );
-  };
- 
-  const getAverageOrderValue = () => {
-    const totalOrders = customers.reduce(
-      (sum, customer) => ~~sum + customer.total_orders,
-      0
-    );
-    const totalRevenue = getTotalRevenue();
+  const getTotalRevenue = useMemo(() => {
+    return customers.reduce((sum, c) => {
+      if (c.totalSpent !== undefined) return sum + Number(c.totalSpent) || 0;
 
-    return ~~totalOrders > 0 ? ~~totalRevenue / ~~customers.length : 0;
-  };
- 
-  const getAverageOrderValue2 = () => {
-    const totalSpent = () => {
-      return customers.reduce((sum, customer) => {
-        const totalSpent =
-          customer.totalSpent !== undefined
-            ? ~~customer.totalSpent
-            : ~~customer.total_spend?.replace("$", "") || 0;
-        const totalOrders = ~~customer.total_orders || 1;
-        return sum + totalSpent / totalOrders;
-      }, 0);
-    };
-    return ~~totalSpent();
+      if (typeof c.total_spend === "string")
+        return (
+          sum + Number(c.total_spend.replace(/[^0-9.-]+/g, "")) || 0
+        );
+
+      return sum;
+    }, 0);
+  }, [customers]);
+
+  const getAverageOrderValue = useMemo(() => {
+    const totalOrders = customers.reduce(
+      (sum, c) => sum + Number(c.total_orders || 0),
+      0
+    );
+
+    if (totalOrders === 0) return 0;
+
+    return getTotalRevenue / totalOrders;
+  }, [customers, getTotalRevenue]);
+
+  const handleSendMessage = () => {
+    if (messageText.trim()) {
+      dispatch({
+        type: "ADD_NOTIFICATION",
+        payload: {
+          id: Date.now(),
+          type: "message",
+          message: `Message sent to ${showMessageBox.name}: ${messageText}`,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
+    setShowMessageBox(null);
+    setMessageText("");
   };
 
   return (
@@ -103,11 +146,11 @@ const Customers = () => {
             <span className="stat-label">Total Customers</span>
           </div>
           <div className="stat-item">
-            <span className="stat-value">${getAverageOrderValue2()}</span>
+            <span className="stat-value">${getTotalRevenue.toFixed(2)}</span>
             <span className="stat-label">Total Revenue</span>
           </div>
           <div className="stat-item">
-            <span className="stat-value">${getAverageOrderValue()}</span>
+            <span className="stat-value">${getAverageOrderValue.toFixed(2)}</span>
             <span className="stat-label">Avg Order Value</span>
           </div>
         </div>
@@ -140,92 +183,92 @@ const Customers = () => {
                 Location {getSortIcon("location")}
               </th>
               <th>Phone</th>
-              <th
-                onClick={() => handleSort("totalOrders")}
-                className="sortable"
-              >
+              <th onClick={() => handleSort("totalOrders")} className="sortable">
                 Orders {getSortIcon("totalOrders")}
               </th>
               <th onClick={() => handleSort("totalSpent")} className="sortable">
                 Total Spent {getSortIcon("totalSpent")}
               </th>
-
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredCustomers.map((customer, index) => (
-              <tr key={customer.id} className="customer-row">
-                <td>
-                  <div className="customer-name">
-                    <img
-                      src={`https://randomuser.me/api/portraits/men/${index}.jpg`}
-                      alt={customer.name}
-                      className="customer-avatar"
-                    />
-                    <span>{customer.name}</span>
-                  </div>
-                </td>
-                <td className="customer-email">{customer.email}</td>
-                <td>{customer.location}</td>
-                <td className="customer-phone">{customer.phone}</td>
-                <td>
-                  <span className="orders-badge">{customer.total_orders}</span>
-                </td>
-                <td className="customer-spent">{customer.total_spend}</td>
-                <td>
-                  <div className="customer-actions">
-                    <button
-                      className="action-btn view"
-                      title="View Details"
-                      onClick={() => {
-                        setSelectedCustomer(customer);
-                        setInd(index);
-                      }}
-                    >
-                      👁️
-                    </button>
-
-                    <button
-                      className="action-btn edit"
-                      title="Edit Customer"
-                      onClick={() => handleEditCustomer(customer)}
-                    >
-                      ✏️
-                    </button>
-
-                    <button
-                      className="action-btn message"
-                      title="Send Message"
-                      onClick={() => handleMessageCustomer(customer)}
-                    >
-                      💬
-                    </button>
-                  </div>
+            {filteredCustomers.length === 0 && (
+              <tr>
+                <td colSpan={7} style={{ textAlign: "center", padding: "1rem" }}>
+                  No customers found.
                 </td>
               </tr>
-            ))}
+            )}
+            {filteredCustomers.map((customer) => {
+              const avatarIndex = getAvatarIndex(customer.id);
+              return (
+                <tr key={customer.id} className="customer-row">
+                  <td>
+                    <div className="customer-name">
+                      <img
+                        src={`https://randomuser.me/api/portraits/men/${avatarIndex}.jpg`}
+                        alt={customer.name}
+                        className="customer-avatar"
+                      />
+                      <span>{customer.name || "No Name"}</span>
+                    </div>
+                  </td>
+                  <td className="customer-email">{customer.email || "-"}</td>
+                  <td>{customer.location || "-"}</td>
+                  <td className="customer-phone">{customer.phone || "-"}</td>
+                  <td>
+                    <span className="orders-badge">{customer.total_orders ?? 0}</span>
+                  </td>
+                  <td className="customer-spent">{customer.total_spend || "$0.00"}</td>
+                  <td>
+                    <div className="customer-actions">
+                      <button
+                        className="action-btn view"
+                        title="View Details"
+                        onClick={() => setSelectedCustomer(customer)}
+                      >
+                        👁️
+                      </button>
+
+                      <button
+                        className="action-btn edit"
+                        title="Edit Customer"
+                        onClick={() => setEditCustomer(customer)}
+                      >
+                        ✏️
+                      </button>
+
+                      <button
+                        className="action-btn message"
+                        title="Send Message"
+                        onClick={() => setShowMessageBox(customer)}
+                      >
+                        💬
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
+
       {editCustomer && (
-        <div className="modal-overlay" onClick={() => setEditCustomer(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => setEditCustomer(null)} role="dialog" aria-modal="true">
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="document">
             <h3>Edit Customer</h3>
             <input
               type="text"
-              value={editCustomer.name}
-              onChange={(e) =>
-                setEditCustomer({ ...editCustomer, name: e.target.value })
-              }
+              value={editCustomer.name || ""}
+              onChange={(e) => setEditCustomer({ ...editCustomer, name: e.target.value })}
               placeholder="Name"
             />
             <input
               type="email"
-              value={editCustomer.email}
-              onChange={(e) =>
-                setEditCustomer({ ...editCustomer, email: e.target.value })
-              }
+              value={editCustomer.email || ""}
+              onChange={(e) => setEditCustomer({ ...editCustomer, email: e.target.value })}
               placeholder="Email"
             />
             <button
@@ -239,83 +282,60 @@ const Customers = () => {
           </div>
         </div>
       )}
-      
-      
+
       {showMessageBox && (
-        <div className="modal-overlay" onClick={() => setShowMessageBox(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Message to {showMessageBox.name}</h3>
-            <textarea placeholder="Write your message here..."></textarea>
-            <button
-              onClick={() => {
-                // sendMessage(showMessageBox.email, messageText)
-                setShowMessageBox(null);
-              }}
-            >
-              Send
-            </button>
+        <div className="modal-overlay" onClick={() => setShowMessageBox(null)} role="dialog" aria-modal="true">
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="document">
+            <h3>Message to {showMessageBox.name || "Customer"}</h3>
+            <textarea
+              placeholder="Write your message here..."
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+            />
+            <button onClick={handleSendMessage}>Send</button>
           </div>
         </div>
       )}
 
-      {filteredCustomers.length === 0 && (
-        <div className="no-results">
-          <div className="no-results-icon">🔍</div>
-          <h3>No customers found</h3>
-          <p>Try adjusting your search criteria</p>
-        </div>
-      )}
-
       {selectedCustomer && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedCustomer(null)}
-        >
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => setSelectedCustomer(null)} role="dialog" aria-modal="true">
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="document">
             <div className="modal-header">
               <h3>Customer Details</h3>
-              <button
-                className="close-btn"
-                onClick={() => setSelectedCustomer(null)}
-              >
+              <button className="close-btn" aria-label="Close" onClick={() => setSelectedCustomer(null)}>
                 ×
               </button>
             </div>
             <div className="modal-body">
               <div className="customer-profile">
                 <img
-                  src={`https://randomuser.me/api/portraits/men/${ind}.jpg`}
+                  src={`https://randomuser.me/api/portraits/men/${getAvatarIndex(selectedCustomer.id)}.jpg`}
                   alt={selectedCustomer.name}
                   className="profile-avatar"
                 />
                 <div className="profile-info">
-                  <h4>{selectedCustomer.name}</h4>
-                  <p>{selectedCustomer.email}</p>
+                  <h4>{selectedCustomer.name || "-"}</h4>
+                  <p>{selectedCustomer.email || "-"}</p>
                   <span className="customer-location">
-                    📍 {selectedCustomer.location}
+                    📍 {selectedCustomer.location || "-"}
                   </span>
                 </div>
               </div>
 
               <div className="customer-stats">
                 <div className="stat-card">
-                  <span className="stat-number">
-                    {selectedCustomer.total_orders}
-                  </span>
+                  <span className="stat-number">{selectedCustomer.total_orders ?? 0}</span>
                   <span className="stat-text">Total Orders</span>
                 </div>
                 <div className="stat-card">
-                  <span className="stat-number">
-                    {selectedCustomer.total_spend}
-                  </span>
+                  <span className="stat-number">{selectedCustomer.total_spend || "$0.00"}</span>
                   <span className="stat-text">Total Spent</span>
                 </div>
                 <div className="stat-card">
                   <span className="stat-number">
-                    $
-                    {(
-                      ~~selectedCustomer.total_spend.replace("$", "") /
-                      ~~selectedCustomer.total_orders
+                    ${(
+                      Number(selectedCustomer.total_spend?.replace(/[^0-9.-]+/g, "") || 0) /
+                        (Number(selectedCustomer.total_orders) || 1)
                     ).toFixed(2)}
                   </span>
                   <span className="stat-text">Avg Order</span>
@@ -325,7 +345,7 @@ const Customers = () => {
               <div className="customer-details">
                 <div className="detail-item">
                   <span className="detail-label">Phone:</span>
-                  <span className="detail-value">{selectedCustomer.phone}</span>
+                  <span className="detail-value">{selectedCustomer.phone || "-"}</span>
                 </div>
               </div>
             </div>

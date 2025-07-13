@@ -20,13 +20,16 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
 }
 
 .logo-icon {
   font-size: 1.5rem;
 }
-
+.logo-icon img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
 .logo-text {
   font-size: 1.25rem;
   font-weight: 700;
@@ -37,7 +40,7 @@
 .sidebar-nav {
   flex: 1;
   padding: 1rem 0;
-  overflow-y: auto;
+  overflow-y: none;
 }
 
 .nav-item {
@@ -66,6 +69,7 @@
 .nav-item.active {
   background: var(--accent-bg);
   color: var(--accent-color);
+  transform: translateX(4px);
   font-weight: 600;
 }
 
@@ -143,4 +147,37 @@
   .sidebar.open {
     transform: translateX(0);
   }
+}
+.sidebar {
+  width: 250px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar-collapsed {
+  width: 60px;
+}
+
+.sidebar-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+}
+
+.nav-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.sidebar-collapsed .nav-label,
+.sidebar-collapsed .nav-badge,
+.sidebar-collapsed .user-details {
+  display: none;
 }

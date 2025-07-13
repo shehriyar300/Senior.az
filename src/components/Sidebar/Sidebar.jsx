@@ -1,12 +1,14 @@
 "use client"
 
+import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useAppContext } from "../../context/AppContext.jsx"
 import "./Sidebar.css"
 
 const Sidebar = () => {
   const location = useLocation()
-  const { basket } = useAppContext()
+  const { basket  ,dispatch } = useAppContext()
+  const [collapsed, setCollapsed] = useState(false)
 
   const menuItems = [
     { path: "/", label: "Dashboard", icon: "⊞" },
@@ -21,8 +23,19 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${collapsed ? "" : "sidebar-collapsed"}`}>
       <div className="sidebar-header">
+        <button
+          className="sidebar-toggle-btn"
+          onClick={() => {
+            setCollapsed(!collapsed)
+            dispatch({ type: "TOGGLE_SIDEBAR" })
+          }}
+          title="Toggle Sidebar"
+        >
+          ☰
+        </button>
+
         <div className="logo">
           <span className="logo-icon">
             <img
@@ -42,8 +55,8 @@ const Sidebar = () => {
             className={`nav-item ${isActive(item.path) ? "active" : ""}`}
           >
             <span className="nav-icon">{item.icon}</span>
-            <span className="nav-label">{item.label}</span>
-            {item.badge > 0 && (
+            {collapsed && <span className="nav-label">{item.label}</span>}
+            {item.badge > 0 && collapsed && (
               <span className="nav-badge">{item.badge}</span>
             )}
           </Link>
@@ -57,10 +70,12 @@ const Sidebar = () => {
             alt="User"
             className="user-avatar"
           />
-          <div className="user-details">
-            <span className="user-name">Shahriyar Alasgarli</span>
-            <span className="user-role">Administrator</span>
-          </div>
+          {collapsed && (
+            <div className="user-details">
+              <span className="user-name">Shahriyar Alasgarli</span>
+              <span className="user-role">Administrator</span>
+            </div>
+          )}
         </div>
       </div>
     </aside>

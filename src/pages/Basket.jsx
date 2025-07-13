@@ -1,6 +1,8 @@
 "use client"
 
+import { Link } from "react-router-dom"
 import { useAppContext } from "../context/AppContext.jsx"
+
 import "./Basket.css"
 
 const Basket = () => {
@@ -59,12 +61,9 @@ const Basket = () => {
           <div className="empty-icon">🛒</div>
           <h3>Your basket is empty</h3>
           <p>Add some products to get started</p>
-          <button
-            className="continue-shopping-btn"
-            onClick={() => dispatch({ type: "SET_CURRENT_PAGE", payload: "products" })}
-          >
+          <Link to="/products" className="continue-shopping-btn">
             Continue Shopping
-          </button>
+          </Link>
         </div>
       </div>
     )
@@ -158,12 +157,9 @@ const Basket = () => {
 
             <button className="checkout-btn">Proceed to Checkout</button>
 
-            <button
-              className="continue-shopping-btn secondary"
-              onClick={() => dispatch({ type: "SET_CURRENT_PAGE", payload: "products" })}
-            >
-              Continue Shopping
-            </button>
+            <Link to="/products" className="continue-shopping-btn">
+            Continue Shopping
+          </Link>
           </div>
         </div>
       </div>

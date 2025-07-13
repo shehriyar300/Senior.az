@@ -24,3 +24,11 @@
     margin-left: 0;
   }
 }
+.main-collapsed {
+  transition: all 1.3s ease;
+  margin-left: 60px;
+}
+
+.main-collapsed-closed {
+  transition: all 0.3s ease;
+}
