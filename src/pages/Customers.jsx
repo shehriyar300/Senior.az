@@ -40,9 +40,7 @@ const Customers = () => {
       const term = searchTerm.toLowerCase();
 
       return (
-        name.includes(term) ||
-        email.includes(term) ||
-        location.includes(term)
+        name.includes(term) || email.includes(term) || location.includes(term)
       );
     });
 
@@ -96,12 +94,8 @@ const Customers = () => {
   const getTotalRevenue = useMemo(() => {
     return customers.reduce((sum, c) => {
       if (c.totalSpent !== undefined) return sum + Number(c.totalSpent) || 0;
-
       if (typeof c.total_spend === "string")
-        return (
-          sum + Number(c.total_spend.replace(/[^0-9.-]+/g, "")) || 0
-        );
-
+        return sum + Number(c.total_spend.replace(/[^0-9.-]+/g, "")) || 0;
       return sum;
     }, 0);
   }, [customers]);
@@ -111,9 +105,7 @@ const Customers = () => {
       (sum, c) => sum + Number(c.total_orders || 0),
       0
     );
-
     if (totalOrders === 0) return 0;
-
     return getTotalRevenue / totalOrders;
   }, [customers, getTotalRevenue]);
 
@@ -133,8 +125,35 @@ const Customers = () => {
     setMessageText("");
   };
 
+  const deleteCustomer = async (id) => {
+    try {
+      await fetch(`http://localhost:3001/initialCustomers/${id}`, {
+        method: "DELETE",
+      });
+      dispatch({ type: "DELETE_CUSTOMER", payload: id }); // bu səhifədən də silir
+    } catch (error) {
+      console.error("Failed to delete customer:", error);
+    }
+  };
+
+  const saveEditedCustomer = async () => {
+    try {
+      await fetch(`http://localhost:3001/initialCustomers/${editCustomer.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editCustomer),
+      });
+
+      dispatch({ type: "UPDATE_CUSTOMER", payload: editCustomer });
+      setEditCustomer(null);
+    } catch (error) {
+      console.error("Failed to update customer:", error);
+    }
+  };
+
   return (
     <div className="customers">
+      {/* HEADER */}
       <div className="page-header">
         <div className="header-content">
           <h1>Customers</h1>
@@ -150,12 +169,15 @@ const Customers = () => {
             <span className="stat-label">Total Revenue</span>
           </div>
           <div className="stat-item">
-            <span className="stat-value">${getAverageOrderValue.toFixed(2)}</span>
+            <span className="stat-value">
+              ${getAverageOrderValue.toFixed(2)}
+            </span>
             <span className="stat-label">Avg Order Value</span>
           </div>
         </div>
       </div>
 
+      {/* SEARCH */}
       <div className="customers-controls">
         <div className="search-box">
           <input
@@ -169,6 +191,7 @@ const Customers = () => {
         </div>
       </div>
 
+      {/* TABLE */}
       <div className="customers-table-container">
         <table className="customers-table">
           <thead>
@@ -183,7 +206,10 @@ const Customers = () => {
                 Location {getSortIcon("location")}
               </th>
               <th>Phone</th>
-              <th onClick={() => handleSort("totalOrders")} className="sortable">
+              <th
+                onClick={() => handleSort("totalOrders")}
+                className="sortable"
+              >
                 Orders {getSortIcon("totalOrders")}
               </th>
               <th onClick={() => handleSort("totalSpent")} className="sortable">
@@ -195,7 +221,10 @@ const Customers = () => {
           <tbody>
             {filteredCustomers.length === 0 && (
               <tr>
-                <td colSpan={7} style={{ textAlign: "center", padding: "1rem" }}>
+                <td
+                  colSpan={7}
+                  style={{ textAlign: "center", padding: "1rem" }}
+                >
                   No customers found.
                 </td>
               </tr>
@@ -218,9 +247,13 @@ const Customers = () => {
                   <td>{customer.location || "-"}</td>
                   <td className="customer-phone">{customer.phone || "-"}</td>
                   <td>
-                    <span className="orders-badge">{customer.total_orders ?? 0}</span>
+                    <span className="orders-badge">
+                      {customer.total_orders ?? 0}
+                    </span>
                   </td>
-                  <td className="customer-spent">{customer.total_spend || "$0.00"}</td>
+                  <td className="customer-spent">
+                    {customer.total_spend || "$0.00"}
+                  </td>
                   <td>
                     <div className="customer-actions">
                       <button
@@ -230,7 +263,6 @@ const Customers = () => {
                       >
                         👁️
                       </button>
-
                       <button
                         className="action-btn edit"
                         title="Edit Customer"
@@ -238,13 +270,19 @@ const Customers = () => {
                       >
                         ✏️
                       </button>
-
                       <button
                         className="action-btn message"
                         title="Send Message"
                         onClick={() => setShowMessageBox(customer)}
                       >
                         💬
+                      </button>
+                      <button
+                        className="action-btn delete"
+                        title="Delete Customer"
+                        onClick={() => deleteCustomer(customer.id)}
+                      >
+                        🗑️
                       </button>
                     </div>
                   </td>
@@ -255,37 +293,81 @@ const Customers = () => {
         </table>
       </div>
 
+      {/* Edit Modal */}
       {editCustomer && (
-        <div className="modal-overlay" onClick={() => setEditCustomer(null)} role="dialog" aria-modal="true">
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="document">
+        <div
+          className="modal-overlay"
+          onClick={() => setEditCustomer(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            role="document"
+          >
             <h3>Edit Customer</h3>
             <input
               type="text"
               value={editCustomer.name || ""}
-              onChange={(e) => setEditCustomer({ ...editCustomer, name: e.target.value })}
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, name: e.target.value })
+              }
               placeholder="Name"
             />
             <input
               type="email"
               value={editCustomer.email || ""}
-              onChange={(e) => setEditCustomer({ ...editCustomer, email: e.target.value })}
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, email: e.target.value })
+              }
               placeholder="Email"
             />
-            <button
-              onClick={() => {
-                dispatch({ type: "UPDATE_CUSTOMER", payload: editCustomer });
-                setEditCustomer(null);
-              }}
-            >
-              Save
-            </button>
+            <input
+              type="text"
+              value={editCustomer.phone || ""}
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, phone: e.target.value })
+              }
+              placeholder="Phone"
+            />
+            <input
+              type="text"
+              value={editCustomer.location || ""}
+              onChange={(e) =>
+                setEditCustomer({ ...editCustomer, location: e.target.value })
+              }
+              placeholder="Location"
+            />
+            <input
+              type="number"
+              value={editCustomer.total_orders || ""}
+              onChange={(e) =>
+                setEditCustomer({
+                  ...editCustomer,
+                  total_orders: e.target.value,
+                })
+              }
+              placeholder="Total Orders"
+            />
+            <button onClick={saveEditedCustomer}>Save</button>
           </div>
         </div>
       )}
 
+      {/* Message Modal */}
       {showMessageBox && (
-        <div className="modal-overlay" onClick={() => setShowMessageBox(null)} role="dialog" aria-modal="true">
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="document">
+        <div
+          className="modal-overlay"
+          onClick={() => setShowMessageBox(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            role="document"
+          >
             <h3>Message to {showMessageBox.name || "Customer"}</h3>
             <textarea
               placeholder="Write your message here..."
@@ -297,19 +379,35 @@ const Customers = () => {
         </div>
       )}
 
+      {/* View Modal */}
       {selectedCustomer && (
-        <div className="modal-overlay" onClick={() => setSelectedCustomer(null)} role="dialog" aria-modal="true">
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="document">
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedCustomer(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            role="document"
+          >
             <div className="modal-header">
               <h3>Customer Details</h3>
-              <button className="close-btn" aria-label="Close" onClick={() => setSelectedCustomer(null)}>
+              <button
+                className="close-btn"
+                aria-label="Close"
+                onClick={() => setSelectedCustomer(null)}
+              >
                 ×
               </button>
             </div>
             <div className="modal-body">
               <div className="customer-profile">
                 <img
-                  src={`https://randomuser.me/api/portraits/men/${getAvatarIndex(selectedCustomer.id)}.jpg`}
+                  src={`https://randomuser.me/api/portraits/men/${getAvatarIndex(
+                    selectedCustomer.id
+                  )}.jpg`}
                   alt={selectedCustomer.name}
                   className="profile-avatar"
                 />
@@ -321,31 +419,40 @@ const Customers = () => {
                   </span>
                 </div>
               </div>
-
               <div className="customer-stats">
                 <div className="stat-card">
-                  <span className="stat-number">{selectedCustomer.total_orders ?? 0}</span>
+                  <span className="stat-number">
+                    {selectedCustomer.total_orders ?? 0}
+                  </span>
                   <span className="stat-text">Total Orders</span>
                 </div>
                 <div className="stat-card">
-                  <span className="stat-number">{selectedCustomer.total_spend || "$0.00"}</span>
+                  <span className="stat-number">
+                    {selectedCustomer.total_spend || "$0.00"}
+                  </span>
                   <span className="stat-text">Total Spent</span>
                 </div>
                 <div className="stat-card">
                   <span className="stat-number">
-                    ${(
-                      Number(selectedCustomer.total_spend?.replace(/[^0-9.-]+/g, "") || 0) /
-                        (Number(selectedCustomer.total_orders) || 1)
+                    $
+                    {(
+                      Number(
+                        selectedCustomer.total_spend?.replace(
+                          /[^0-9.-]+/g,
+                          ""
+                        ) || 0
+                      ) / (Number(selectedCustomer.total_orders) || 1)
                     ).toFixed(2)}
                   </span>
                   <span className="stat-text">Avg Order</span>
                 </div>
               </div>
-
               <div className="customer-details">
                 <div className="detail-item">
                   <span className="detail-label">Phone:</span>
-                  <span className="detail-value">{selectedCustomer.phone || "-"}</span>
+                  <span className="detail-value">
+                    {selectedCustomer.phone || "-"}
+                  </span>
                 </div>
               </div>
             </div>

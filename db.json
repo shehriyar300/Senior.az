@@ -1,28 +1,6 @@
 {
   "initialCustomers": [
     {
-      "id": "1",
-      "name": "Brittan Rois",
-      "email": "brois0@unicef.org",
-      "location": "Bator",
-      "phone": "+62 745 807 7685",
-      "totalSpent": 557248.44,
-      "totalOrders": 24011,
-      "joinDate": "2023-01-15",
-      "avatar": "/placeholder.svg?height=40&width=40"
-    },
-    {
-      "id": "2",
-      "name": "Matthew Junifer",
-      "email": "mjunifer1@buzzfeed.com",
-      "location": "Bromma",
-      "phone": "+46 993 722 3008",
-      "totalSpent": 599864.94,
-      "totalOrders": 60195,
-      "joinDate": "2023-03-22",
-      "avatar": "/placeholder.svg?height=40&width=40"
-    },
-    {
       "id": "3",
       "name": "Finlay Baylay",
       "email": "fbaylay2@purevolume.com",
@@ -68,15 +46,6 @@
       "phone": "+86 805 547 3640",
       "total_spend": "$640651.30",
       "total_orders": 97842
-    },
-    {
-      "id": "8",
-      "name": "Ailey Haig",
-      "email": "ahaig7@live.com",
-      "location": "Gizel",
-      "phone": "+7 623 158 0485",
-      "total_spend": "$473255.45",
-      "total_orders": 85298
     },
     {
       "id": "9",
@@ -511,15 +480,6 @@
       "total_orders": 82839
     },
     {
-      "id": "57",
-      "name": "Carla Firsby",
-      "email": "cfirsby1k@xrea.com",
-      "location": "Artur Nogueira",
-      "phone": "+55 238 356 2094",
-      "total_spend": "$965901.20",
-      "total_orders": 16879
-    },
-    {
       "id": "58",
       "name": "Taite Oakenford",
       "email": "toakenford1l@sun.com",
@@ -772,15 +732,6 @@
       "total_orders": 25553
     },
     {
-      "id": "86",
-      "name": "Abagail Garth",
-      "email": "agarth2d@wiley.com",
-      "location": "Melfi",
-      "phone": "+235 627 502 0870",
-      "total_spend": "$830054.12",
-      "total_orders": 56715
-    },
-    {
       "id": "87",
       "name": "Tome Sessuns",
       "email": "tsessuns2e@desdev.cn",
@@ -815,15 +766,6 @@
       "phone": "+86 823 166 6095",
       "total_spend": "$679196.04",
       "total_orders": 93350
-    },
-    {
-      "id": "91",
-      "name": "Alister Batten",
-      "email": "abatten2i@google.com.au",
-      "location": "Petaling Jaya",
-      "phone": "+60 560 404 2745",
-      "total_spend": "$10542.24",
-      "total_orders": 7586
     },
     {
       "id": "92",
@@ -896,15 +838,6 @@
       "phone": "+63 702 332 2827",
       "total_spend": "$434732.89",
       "total_orders": 49922
-    },
-    {
-      "id": "100",
-      "name": "Abagael McVrone",
-      "email": "amcvrone2r@ihg.com",
-      "location": "Dongfeng",
-      "phone": "+86 630 450 6014",
-      "total_spend": "$920279.19",
-      "total_orders": 32514
     }
   ],
   "initialProducts": [
@@ -1034,10 +967,10 @@
       "id": "e294",
       "title": "Airpods 3",
       "description": "Apple airpods 3",
-      "price": 259,
+      "price": 270,
       "discountPrice": 13,
       "rating": 4,
-      "stock": 28,
+      "stock": 40,
       "category": "Electronics",
       "image": "https://images.unsplash.com/photo-1652819804299-eea887780ca7?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGVjaCUyMHByb2R1Y3R8ZW58MHx8MHx8fDA%3D",
       "create_at": 1752369694633,
@@ -1054,6 +987,149 @@
       "category": "Electronics",
       "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-acs-1109-tw-0488.png",
       "create_at": 1752370039165,
+      "color": "#000"
+    },
+    {
+      "id": "08a6",
+      "name": "Airpods 3",
+      "description": "apple",
+      "price": 222,
+      "discountPrice": 16,
+      "rating": 3,
+      "stock": 22,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-acs-1109-tw-0488.png",
+      "create_at": 1752371080861,
+      "color": "#000"
+    },
+    {
+      "id": "680d",
+      "name": "Apple Watch Ultra 2 Cellular 49mm",
+      "description": "Natural W/Blue Trail Loop M/L /",
+      "price": 1599,
+      "discountPrice": 1,
+      "rating": 3,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-smw-1106-sw-0579_5-7d938d11.webp",
+      "create_at": 1752423170894,
+      "color": "#000"
+    },
+    {
+      "id": "9ea9",
+      "name": "HUAWEI Watch 5 42mm",
+      "description": "HUAWEI Watch 5 42mm Beige Denim 55020EVQ",
+      "price": 799,
+      "discountPrice": 2,
+      "rating": 4,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-smw-1106-sw-0578_1-ef782e7e.webp",
+      "create_at": 1752423221529,
+      "color": "#000"
+    },
+    {
+      "id": "4131",
+      "name": "Kieslect Actor Calling Watch",
+      "description": "Kieslect Actor Calling Watch Leading W/Stainless Steel Strap/Black\n",
+      "price": 179,
+      "discountPrice": 4,
+      "rating": 1,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-smw-1106-sw-0567_1-03dad3be.webp",
+      "create_at": 1752423262886,
+      "color": "#000"
+    },
+    {
+      "id": "404a",
+      "name": "Samsung Galaxy Watch 8 46mm",
+      "description": "\n\n\nSamsung Galaxy Watch 8 46mm Classic White / SM-L500NZWACIS",
+      "price": 799,
+      "discountPrice": 17,
+      "rating": 4,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-smw-1106-sw-0600_001-20cc8c73.webp",
+      "create_at": 1752423303421,
+      "color": "#000"
+    },
+    {
+      "id": "d386",
+      "name": "Samsung Galaxy Watch 8 44mm",
+      "description": "Samsung Galaxy Watch 8 44mm Dark Gray / SM-L330NDAACIS",
+      "price": 649,
+      "discountPrice": 19,
+      "rating": 2,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-smw-1106-sw-0597_001-7ae0283d.webp",
+      "create_at": 1752423339547,
+      "color": "#000"
+    },
+    {
+      "id": "530f",
+      "name": "  Apple Value Set 5",
+      "description": "\nApple Value Set 5",
+      "price": 359,
+      "discountPrice": 14,
+      "rating": 1,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-acs-1267-kt-2407_1-e1f3bce5.webp",
+      "create_at": 1752423412487,
+      "color": "#000"
+    },
+    {
+      "id": "638d",
+      "name": "Apple AirTag ",
+      "description": "Apple AirTag 4 Pack MX542RU/A",
+      "price": 247,
+      "discountPrice": 8,
+      "rating": 2,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-acs-1109-tr-0009_10-37d21624.webp",
+      "create_at": 1752423462951,
+      "color": "#000"
+    },
+    {
+      "id": "5cc1",
+      "name": "iPhone 16 Pro Max",
+      "description": "iPhone 16 Pro Max 256 GB Black Titanium",
+      "price": 3199,
+      "discountPrice": 3,
+      "rating": 5,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-sbp-1105-sm-2933_4-a1e1bd57.webp",
+      "create_at": 1752423528233,
+      "color": "#000"
+    },
+    {
+      "id": "6141",
+      "name": "Vertu MetaVertu 2 YG",
+      "description": "Vertu MetaVertu 2 YG Lotus Whisper Iron Black Alli (M2-G-JS-E03-008-HW)",
+      "price": 36899,
+      "discountPrice": 9,
+      "rating": 1,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-sbp-1105-sm-3004_12-8f0075e7.webp",
+      "create_at": 1752423585242,
+      "color": "#000"
+    },
+    {
+      "id": "956a",
+      "name": "Samsung Galaxy Z Fold7",
+      "description": "Samsung Galaxy Z Fold7 (F966) 12 GB / 1 TB Black",
+      "price": 4500,
+      "discountPrice": 1,
+      "rating": 1,
+      "stock": 100,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-sbp-1105-sm-3603_1-ffaff50b.webp",
+      "create_at": 1752423648047,
       "color": "#000"
     }
   ]

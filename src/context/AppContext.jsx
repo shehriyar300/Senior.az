@@ -156,6 +156,11 @@ function appReducer(state, action) {
           ...state.recentActions,
         ],
       };
+case "DELETE_CUSTOMER":
+  return {
+    ...state,
+    customers: state.customers.filter((customer) => customer.id !== action.payload),
+  };
 
     case "DELETE_PRODUCT": {
       const productToDelete = state.products.find(
