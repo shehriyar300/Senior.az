@@ -174,24 +174,6 @@
       "total_orders": 96017
     },
     {
-      "id": "23",
-      "name": "Ann Boise",
-      "email": "aboisem@nhs.uk",
-      "location": "Esuk Oron",
-      "phone": "+234 958 752 1521",
-      "total_spend": "$341368.58",
-      "total_orders": 83833
-    },
-    {
-      "id": "24",
-      "name": "Reynard Goodacre",
-      "email": "rgoodacren@opera.com",
-      "location": "Isoka",
-      "phone": "+260 860 266 9740",
-      "total_spend": "$362313.38",
-      "total_orders": 15703
-    },
-    {
       "id": "25",
       "name": "Corrie Guerro",
       "email": "cguerroo@ca.gov",
@@ -496,15 +478,6 @@
       "phone": "+351 554 677 9118",
       "total_spend": "$794096.97",
       "total_orders": 67929
-    },
-    {
-      "id": "60",
-      "name": "Christalle Ciraldo",
-      "email": "cciraldo1n@google.com",
-      "location": "Šentvid pri Stični",
-      "phone": "+386 906 510 2232",
-      "total_spend": "$265441.66",
-      "total_orders": 2684
     },
     {
       "id": "61",
@@ -840,6 +813,123 @@
       "total_orders": 49922
     }
   ],
+  "Wishlist": [
+    {
+      "id": "9933",
+      "title": "Callie Cobb",
+      "description": "Dolore quos obcaecat",
+      "price": 554,
+      "discountPrice": 17,
+      "rating": 2,
+      "stock": 448,
+      "category": "Sports",
+      "image": "https://magicstudio.com/blog/content/images/2023/10/lifestype-shots.jpg",
+      "create_at": 1752368447697,
+      "color": "#000"
+    },
+    {
+      "id": "9933",
+      "title": "Callie Cobb",
+      "description": "Dolore quos obcaecat",
+      "price": 554,
+      "discountPrice": 17,
+      "rating": 2,
+      "stock": 448,
+      "category": "Sports",
+      "image": "https://magicstudio.com/blog/content/images/2023/10/lifestype-shots.jpg",
+      "create_at": 1752368447697,
+      "color": "#000"
+    },
+    {
+      "id": "08a6",
+      "name": "Airpods 3",
+      "description": "apple",
+      "price": 222,
+      "discountPrice": 16,
+      "rating": 3,
+      "stock": 22,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-acs-1109-tw-0488.png",
+      "create_at": 1752371080861,
+      "color": "#000"
+    },
+    {
+      "id": "08a6",
+      "name": "Airpods 3",
+      "description": "apple",
+      "price": 222,
+      "discountPrice": 16,
+      "rating": 3,
+      "stock": 22,
+      "category": "Electronics",
+      "image": "https://kontakt.az/media/catalog/product/cache/a404967cc40694dc557cd869288440a4/t/m/tm-dg-acs-1109-tw-0488.png",
+      "create_at": 1752371080861,
+      "color": "#000"
+    },
+    {
+      "id": "e294",
+      "title": "Airpods 3",
+      "description": "Apple airpods 3",
+      "price": 270,
+      "discountPrice": 13,
+      "rating": 4,
+      "stock": 40,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1652819804299-eea887780ca7?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGVjaCUyMHByb2R1Y3R8ZW58MHx8MHx8fDA%3D",
+      "create_at": 1752369694633,
+      "color": "#000"
+    },
+    {
+      "id": "e294",
+      "title": "Airpods 3",
+      "description": "Apple airpods 3",
+      "price": 270,
+      "discountPrice": 13,
+      "rating": 4,
+      "stock": 40,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1652819804299-eea887780ca7?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGVjaCUyMHByb2R1Y3R8ZW58MHx8MHx8fDA%3D",
+      "create_at": 1752369694633,
+      "color": "#000"
+    }
+  ],
+  "Notifications": [
+    {
+      "id": 1,
+      "message": "New order received from John Doe",
+      "time": "2 min ago",
+      "read": false,
+      "type": "order"
+    },
+    {
+      "id": 2,
+      "message": "Product stock running low: iPhone 14 Pro",
+      "time": "1 hour ago",
+      "read": false,
+      "type": "warning"
+    },
+    {
+      "id": 3,
+      "message": "Customer inquiry from Jane Smith",
+      "time": "3 hours ago",
+      "read": true,
+      "type": "message"
+    },
+    {
+      "id": 4,
+      "message": "Monthly sales report is ready",
+      "time": "1 day ago",
+      "read": true,
+      "type": "info"
+    }
+  ],
+  "Stats": {
+    "totalSales": 1995,
+    "dailyVisits": 2001,
+    "totalIncome": 2632,
+    "totalOrders": 1711,
+    "totalProducts": 0
+  },
   "initialProducts": [
     {
       "id": "6e44",

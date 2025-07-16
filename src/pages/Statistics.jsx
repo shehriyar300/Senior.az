@@ -26,7 +26,9 @@ const Statistics = () => {
     { date: "04 Jun", created: 85, completed: 75, overdue: 10 },
   ]
 
-  const maxValue = Math.max(...statisticsData.flatMap((d) => [d.created, d.completed, d.overdue]))
+  const maxValueCreated = Math.max(...statisticsData.map((d) => d.created))
+  const maxValueCompleted = Math.max(...statisticsData.map((d) => d.completed))
+  const maxValueOverdue = Math.max(...statisticsData.map((d) => d.overdue))
 
   const toggleSeries = (series) => {
     setVisibleSeries((prev) => ({
@@ -101,13 +103,14 @@ const Statistics = () => {
 
             <div className="bar-chart-grouped">
               {statisticsData.map((data, index) => (
+                    console.log(( data) ),
                 <div key={index} className="bar-group">
                   <div className="bars">
                     {visibleSeries.created && (
                       <div
                         className="bar created"
                         style={{
-                          height: `${(data.created / maxValue) * 100}%`,
+                          height: `${(data.created / maxValueCreated) * 90}%`,
                           animationDelay: `${index * 0.1}s`,
                         }}
                       ></div>
@@ -116,7 +119,7 @@ const Statistics = () => {
                       <div
                         className="bar completed"
                         style={{
-                          height: `${(data.completed / maxValue) * 100}%`,
+                          height: `${(data.completed / maxValueCompleted) * 50}%`,
                           animationDelay: `${index * 0.1 + 0.05}s`,
                         }}
                       ></div>
@@ -125,7 +128,7 @@ const Statistics = () => {
                       <div
                         className="bar overdue"
                         style={{
-                          height: `${(data.overdue / maxValue) * 100}%`,
+                          height: `${(data.overdue / maxValueOverdue) * 10}%`,
                           animationDelay: `${index * 0.1 + 0.1}s`,
                         }}
                       ></div>

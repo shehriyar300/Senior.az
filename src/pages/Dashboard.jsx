@@ -16,7 +16,8 @@ const Dashboard = () => {
             <div className="stat-card sales">
               <div className="stat-icon">🛒</div>
               <div className="stat-content">
-                <h3>{stats.totalSales.toLocaleString()}</h3>
+                <h3>{stats.totalSales}</h3>
+                
                 <p>Total sales</p>
               </div>
             </div>
@@ -24,7 +25,7 @@ const Dashboard = () => {
             <div className="stat-card visits">
               <div className="stat-icon">📈</div>
               <div className="stat-content">
-                <h3>{stats.dailyVisits.toLocaleString()}</h3>
+                <h3>{stats.dailyVisits}</h3>
                 <p>Daily visits</p>
               </div>
             </div>
@@ -32,7 +33,7 @@ const Dashboard = () => {
             <div className="stat-card income">
               <div className="stat-icon">💰</div>
               <div className="stat-content">
-                <h3>${stats.totalIncome.toLocaleString()}</h3>
+                <h3>${stats.totalIncome}</h3>
                 <p>Total income</p>
               </div>
             </div>
@@ -40,7 +41,7 @@ const Dashboard = () => {
             <div className="stat-card orders">
               <div className="stat-icon">✅</div>
               <div className="stat-content">
-                <h3>{stats.totalOrders.toLocaleString()}</h3>
+                <h3>{stats.totalOrders}</h3>
                 <p>Total orders</p>
               </div>
             </div>
@@ -78,7 +79,7 @@ const Dashboard = () => {
                   <div className="customer-avatar">{customer.name.charAt(0)}</div>
                   <div className="customer-details">
                     <h4>{customer.name}</h4>
-                    <p>${customer.totalSpent.toLocaleString()}</p>
+                    <p>${customer.totalSpent}</p>
                     <span className="customer-orders">{customer.totalOrders} orders</span>
                   </div>
                 </div>

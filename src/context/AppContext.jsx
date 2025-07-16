@@ -11,44 +11,9 @@ const initialState = {
   customers: [],
   basket: [],
   wishlist: [],
-  notifications: [
-    {
-      id: 1,
-      message: "New order received from John Doe",
-      time: "2 min ago",
-      read: false,
-      type: "order",
-    },
-    {
-      id: 2,
-      message: "Product stock running low: iPhone 14 Pro",
-      time: "1 hour ago",
-      read: false,
-      type: "warning",
-    },
-    {
-      id: 3,
-      message: "Customer inquiry from Jane Smith",
-      time: "3 hours ago",
-      read: true,
-      type: "message",
-    },
-    {
-      id: 4,
-      message: "Monthly sales report is ready",
-      time: "1 day ago",
-      read: true,
-      type: "info",
-    },
-  ],
+  notifications: [],
   recentActions: [],
-  stats: {
-    totalSales: 1995,
-    dailyVisits: 2001,
-    totalIncome: 2632,
-    totalOrders: 1711,
-    totalProducts: 0,
-  },
+  stats: []
 };
 
 function appReducer(state, action) {
@@ -77,7 +42,6 @@ function appReducer(state, action) {
     case "ADD_TO_WISHLIST": {
       const product = state.products.find((p) => p.id === action.payload.id);
       if (product) {
-        // əgər artıq wishlistdə varsa əlavə etmə
         const alreadyInWishlist = state.wishlist.some(
           (item) => item.id === product.id
         );
@@ -156,11 +120,13 @@ function appReducer(state, action) {
           ...state.recentActions,
         ],
       };
-case "DELETE_CUSTOMER":
-  return {
-    ...state,
-    customers: state.customers.filter((customer) => customer.id !== action.payload),
-  };
+    case "DELETE_CUSTOMER":
+      return {
+        ...state,
+        customers: state.customers.filter(
+          (customer) => customer.id !== action.payload
+        ),
+      };
 
     case "DELETE_PRODUCT": {
       const productToDelete = state.products.find(
@@ -290,6 +256,19 @@ case "DELETE_CUSTOMER":
           ...state.recentActions,
         ],
       };
+    case "SET_NOTIFICATIONS":
+      return {
+        ...state,
+        notifications: action.payload,
+      };
+    case "SET_STATS":
+      return {
+        ...state,
+        stats: {
+          ...state.stats,
+          ...action.payload,
+        },
+      };
 
     default:
       return state;
@@ -298,29 +277,34 @@ case "DELETE_CUSTOMER":
 
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const customersRes = await fetch("http://localhost:3001/initialCustomers");
+      const productsRes = await fetch("http://localhost:3001/initialProducts");
+      const notificationsRes = await fetch("http://localhost:3001/Notifications");
+      const statsRes = await fetch("http://localhost:3001/Stats");
+      const wishlistRes = await fetch("http://localhost:3001/Wishlist");
 
-  useEffect(() => {
-    fetch("http://localhost:3001/initialCustomers")
-      .then((response) => response.json())
-      .then((data) => {
-        // əgər data içində "customers" varsa
-        dispatch({ type: "SET_CUSTOMERS", payload: data.customers || data });
-      })
-      .catch((err) => {
-        console.error("Fetch customers error:", err);
-      });
-  }, []);
+      const customers = await customersRes.json();
+      const products = await productsRes.json();
+      const notifications = await notificationsRes.json();
+      const stats = await statsRes.json();
+      const wishlist = await wishlistRes.json();
 
-  useEffect(() => {
-    fetch("http://localhost:3001/initialProducts")
-      .then((response) => response.json())
-      .then((data) => {
-        dispatch({ type: "SET_PRODUCTS", payload: data.products || data });
-      })
-      .catch((err) => {
-        console.error("Fetch products error:", err);
-      });
-  }, []);
+      dispatch({ type: "SET_CUSTOMERS", payload: customers.customers || customers });
+      dispatch({ type: "SET_PRODUCTS", payload: products.products || products });
+      dispatch({ type: "SET_NOTIFICATIONS", payload: notifications.notifications || notifications });
+      dispatch({ type: "SET_STATS", payload: stats.stats || stats });
+      dispatch({ type: "SET_WISHLIST", payload: wishlist.wishlist || wishlist });
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   return (
     <AppContext.Provider value={{ ...state, dispatch }}>
