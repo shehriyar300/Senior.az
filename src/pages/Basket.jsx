@@ -1,7 +1,8 @@
 "use client"
 
 import { Link } from "react-router-dom"
-import { useAppContext } from "../context/AppContext.jsx"
+import { useAppContext } from "../context/useAppContext.jsx";
+
 
 import "./Basket.css"
 

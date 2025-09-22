@@ -1,4 +1,4 @@
-import { useEffect, useReducer, createContext, useContext } from "react";
+import { useEffect, useReducer, createContext } from "react";
 
 const AppContext = createContext();
 
@@ -13,7 +13,7 @@ const initialState = {
   wishlist: [],
   notifications: [],
   recentActions: [],
-  stats: []
+  stats: [],
 };
 
 function appReducer(state, action) {
@@ -34,9 +34,24 @@ function appReducer(state, action) {
       return { ...state, currentPage: action.payload };
 
     case "SET_THEME":
+   
+      fetch("http://localhost:3001/mode", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dark: action.payload === "dark" }),
+      }).catch((err) => console.error("Failed to save theme:", err));
       return { ...state, theme: action.payload };
 
     case "SET_ACCENT_COLOR":
+     
+      fetch("http://localhost:3001/mode", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dark: state.theme === "dark",
+          accentColor: action.payload,
+        }),
+      }).catch((err) => console.error("Failed to save accent color:", err));
       return { ...state, accentColor: action.payload };
 
     case "ADD_TO_WISHLIST": {
@@ -277,34 +292,62 @@ function appReducer(state, action) {
 
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const customersRes = await fetch("http://localhost:3001/initialCustomers");
-      const productsRes = await fetch("http://localhost:3001/initialProducts");
-      const notificationsRes = await fetch("http://localhost:3001/Notifications");
-      const statsRes = await fetch("http://localhost:3001/Stats");
-      const wishlistRes = await fetch("http://localhost:3001/Wishlist");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const customersRes = await fetch(
+          "http://localhost:3001/initialCustomers"
+        );
+        const productsRes = await fetch(
+          "http://localhost:3001/initialProducts"
+        );
+        const notificationsRes = await fetch(
+          "http://localhost:3001/Notifications"
+        );
+        const statsRes = await fetch("http://localhost:3001/Stats");
+        const wishlistRes = await fetch("http://localhost:3001/Wishlist");
+        const modeRes = await fetch("http://localhost:3001/mode");
+        const mode = await modeRes.json();
+        const customers = await customersRes.json();
+        const products = await productsRes.json();
+        const notifications = await notificationsRes.json();
+        const stats = await statsRes.json();
+        const wishlist = await wishlistRes.json();
 
-      const customers = await customersRes.json();
-      const products = await productsRes.json();
-      const notifications = await notificationsRes.json();
-      const stats = await statsRes.json();
-      const wishlist = await wishlistRes.json();
+        dispatch({
+          type: "SET_CUSTOMERS",
+          payload: customers.customers || customers,
+        });
+        dispatch({
+          type: "SET_PRODUCTS",
+          payload: products.products || products,
+        });
+        dispatch({
+          type: "SET_THEME",
+          payload: mode.dark ? "dark" : "light",
+        });
+        if (mode.accentColor) {
+          dispatch({
+            type: "SET_ACCENT_COLOR",
+            payload: mode.accentColor,
+          });
+        }
+        dispatch({
+          type: "SET_NOTIFICATIONS",
+          payload: notifications.notifications || notifications,
+        });
+        dispatch({ type: "SET_STATS", payload: stats.stats || stats });
+        dispatch({
+          type: "SET_WISHLIST",
+          payload: wishlist.wishlist || wishlist,
+        });
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    };
 
-      dispatch({ type: "SET_CUSTOMERS", payload: customers.customers || customers });
-      dispatch({ type: "SET_PRODUCTS", payload: products.products || products });
-      dispatch({ type: "SET_NOTIFICATIONS", payload: notifications.notifications || notifications });
-      dispatch({ type: "SET_STATS", payload: stats.stats || stats });
-      dispatch({ type: "SET_WISHLIST", payload: wishlist.wishlist || wishlist });
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
-  };
-
-  fetchData();
-}, []);
-
+    fetchData();
+  }, []);
 
   return (
     <AppContext.Provider value={{ ...state, dispatch }}>
@@ -313,10 +356,4 @@ useEffect(() => {
   );
 }
 
-export function useAppContext() {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useAppContext must be used within an AppProvider");
-  }
-  return context;
-}
+export {  AppContext };

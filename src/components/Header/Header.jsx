@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useAppContext } from "../../context/AppContext.jsx"
+import { useAppContext } from "../../context/useAppContext.jsx"
 import ThemeSettings from "../ThemeSettings/ThemeSettings.jsx"
 import "./Header.css"
 

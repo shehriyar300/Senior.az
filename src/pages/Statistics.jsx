@@ -103,7 +103,7 @@ const Statistics = () => {
 
             <div className="bar-chart-grouped">
               {statisticsData.map((data, index) => (
-                    console.log(( data) ),
+                    // console.log(( data) ),
                 <div key={index} className="bar-group">
                   <div className="bars">
                     {visibleSeries.created && (

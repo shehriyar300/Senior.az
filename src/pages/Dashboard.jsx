@@ -1,4 +1,4 @@
-import { useAppContext } from "../context/AppContext.jsx"
+import { useAppContext } from "../context/useAppContext.jsx"
 import "./Dashboard.css"
 
 const Dashboard = () => {
@@ -45,6 +45,13 @@ const Dashboard = () => {
                 <p>Total orders</p>
               </div>
             </div>
+              <div className="stat-card orders">
+              <div className="stat-icon">👥</div>
+              <div className="stat-content">
+                <h3>{customers.length}</h3>
+                <p>Total customers</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -79,7 +86,7 @@ const Dashboard = () => {
                   <div className="customer-avatar">{customer.name.charAt(0)}</div>
                   <div className="customer-details">
                     <h4>{customer.name}</h4>
-                    <p>${customer.totalSpent}</p>
+                    <p>{customer.totalSpent ? `$${customer.totalSpent}` : customer.total_spend}</p>
                     <span className="customer-orders">{customer.totalOrders} orders</span>
                   </div>
                 </div>

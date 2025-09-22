@@ -1,6 +1,6 @@
 "use client"
 
-import { useAppContext } from "../../context/AppContext.jsx"
+import { useAppContext } from "../../context/useAppContext.jsx"
 import "./ThemeSettings.css"
 
 const ThemeSettings = ({ onClose }) => {

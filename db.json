@@ -567,7 +567,7 @@
       "location": "Yangji",
       "phone": "+86 339 318 7176",
       "total_spend": "$227153.85",
-      "total_orders": 31960
+      "total_orders": "31963"
     },
     {
       "id": "71",
@@ -895,28 +895,28 @@
   ],
   "Notifications": [
     {
-      "id": 1,
+      "id": "1",
       "message": "New order received from John Doe",
       "time": "2 min ago",
       "read": false,
       "type": "order"
     },
     {
-      "id": 2,
+      "id": "2",
       "message": "Product stock running low: iPhone 14 Pro",
       "time": "1 hour ago",
       "read": false,
       "type": "warning"
     },
     {
-      "id": 3,
+      "id": "3",
       "message": "Customer inquiry from Jane Smith",
       "time": "3 hours ago",
       "read": true,
       "type": "message"
     },
     {
-      "id": 4,
+      "id": "4",
       "message": "Monthly sales report is ready",
       "time": "1 day ago",
       "read": true,
@@ -928,7 +928,12 @@
     "dailyVisits": 2001,
     "totalIncome": 2632,
     "totalOrders": 1711,
-    "totalProducts": 0
+    "totalProducts": 0,
+    "totalCustomers": 0
+  },
+  "mode": {
+    "dark": true,
+    "accentColor": "cyan"
   },
   "initialProducts": [
     {

@@ -1,5 +1,6 @@
 import "./wishlist.css"
-import { useAppContext } from "../context/AppContext.jsx"
+import { useAppContext } from "../context/useAppContext.jsx";
+
 import { useState } from "react"
 
 const Wishlist = () => {

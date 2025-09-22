@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAppContext } from "../context/AppContext.jsx";
+import { useAppContext } from "../context/useAppContext.jsx";
 import "./AddProduct.css";
 
 const AddProduct = () => {

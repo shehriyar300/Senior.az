@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { useAppContext } from "../../context/AppContext.jsx"
+import { useAppContext } from "../../context/useAppContext.jsx"
 import "./Sidebar.css"
 
 const Sidebar = () => {

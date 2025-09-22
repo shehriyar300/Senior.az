@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useAppContext } from "../context/AppContext.jsx";
+import { useAppContext } from "../context/useAppContext.jsx";
+
 import "./Customers.css";
 
 const stringToNumberHash = (str) => {

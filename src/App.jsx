@@ -8,7 +8,8 @@ import Basket from "./pages/Basket.jsx";
 import Customers from "./pages/Customers.jsx";
 import Statistics from "./pages/Statistics.jsx";
 import "./App.css";
-import { useAppContext } from "./context/AppContext.jsx"; 
+// import { useAppContext } from "./context/AppContext.jsx"; 
+import { useAppContext } from "./context/useAppContext";
 import Wishlist from "./pages/Wishlist.jsx";
 
 function App() {
